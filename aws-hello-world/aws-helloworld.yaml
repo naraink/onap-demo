@@ -34,26 +34,21 @@ topology_template:
     private_key_path:
       description: Path to the private key used to authenticate into the instance
       type: string
-      default: /home/ubuntu
+      default: /home/ubuntu/Narayanan_K_49630_KP.pem
+    client_config:
+      description: aws config
+      type: aria.aws.datatypes.Config
+      default:
+        aws_access_key_id: AKIAIYVTDP5VXL6KIHLQ
+        aws_secret_access_key: 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
+        region_name: us-east-1
+
+    key_name:
+      description: key name to use while creating ec2 instance_type
+      type: string
+      default: Narayanan_K_49630_KP
 
   node_templates:
-    elastic_ip:
-      type: aria.aws.nodes.ElasticIP
-
-    security_group:
-      type: aria.aws.nodes.SecurityGroup
-      properties:
-        description: Security group for Hello World VM
-        rules:
-          - ip_protocol: tcp
-            cidr_ip: 0.0.0.0/0
-            from_port: { get_property: [ http_web_server, port ] }
-            to_port: { get_property: [ http_web_server, port ] }
-          - ip_protocol: tcp
-            cidr_ip: 0.0.0.0/0
-            from_port: { get_input: ssh_port }
-            to_port: { get_input: ssh_port }
-
     vm:
       type: aria.aws.nodes.Instance
       properties:
@@ -61,16 +56,8 @@ topology_template:
         instance_type: { get_input: instance_type }
         name: aria-aws-hello-world-instance
         parameters:
-          key_name: { get_attribute: [ keypair, aws_resource_id ] }
-      requirements:
-        - elastic_ip: elastic_ip
-        - security_group: security_group
-        - keypair: keypair
-
-    keypair:
-      type: aria.aws.nodes.KeyPair
-      properties:
-        private_key_path: { get_input: private_key_path }
+          key_name: { get_input: key_name }
+        client_config: { get_input: client_config }
 
     http_web_server:
       type: http_web_server
@@ -101,3 +88,7 @@ topology_template:
                 - "ssh.user > { get_input: ssh_username }"
                 - "ssh.key_filename > { get_input: private_key_path }"
                 - "ssh.address > { get_attribute: [ vm, public_ip_address ] }"
+  outputs:
+    public_ip_address:
+      type: string
+      value: { get_attribute: [ vm, public_ip_address ] }
