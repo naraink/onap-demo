@@ -1,0 +1,7 @@
+name: aws-hello-world
+image:
+    upload: false
+    names:
+        - aws-hello-world
+vim_types:
+    - awssdk
