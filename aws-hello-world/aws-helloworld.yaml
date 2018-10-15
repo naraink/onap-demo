@@ -35,13 +35,6 @@ topology_template:
       description: Path to the private key used to authenticate into the instance
       type: string
       default: /home/ubuntu/Narayanan_K_49630_KP.pem
-    client_config:
-      description: aws config
-      type: aria.aws.datatypes.Config
-      default:
-        aws_access_key_id: AKIAIYVTDP5VXL6KIHLQ
-        aws_secret_access_key: 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
-        region_name: us-east-1
 
     key_name:
       description: key name to use while creating ec2 instance_type
